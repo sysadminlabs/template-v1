@@ -1,0 +1,57 @@
+#!/bin/bash
+set -e
+
+PROGNAME=$(basename $0)
+
+die() {
+    echo "$PROGNAME: $*" >&2
+    exit 1
+}
+
+usage() {
+    #if [ "$*" != "1" ] ; then
+    #    echo "Error: $*"
+    #fi
+
+    cat << EOF
+Usage: $PROGNAME [OPTION ...]
+<Program description>.
+
+Options:
+-s, --solution      display the answers to this problem
+-h, --help          display this usage message and exit
+-H, --hint          display hints to solving this problem
+-p, --problem       display the problem statement 
+EOF
+
+    exit 1
+}
+
+if [ $# -eq 0 ] ; 
+then
+	usage
+fi
+
+while [ $# -gt 0 ] ; do
+    case "$1" in
+    -s|--solution)
+        cat /vagrant/solution.txt
+        ;;
+    -h|--help)
+        usage
+        ;;
+    -H|--hint)
+        cat /vagrant/hints.txt
+        ;;
+    -p|--problem)
+        cat /vagrant/problem_statement.txt
+        ;;
+    -*)
+        usage "Unknown option '$1'"
+        ;;
+    *)
+        usage "Too many arguments"
+        ;;
+    esac
+    shift
+done

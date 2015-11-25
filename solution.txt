@@ -1,0 +1,31 @@
+
+Use this file to provide the solution to this problem. Include any commands needed to implement the solution, any dependencies that are needed prior to each command, what the cause of the problem is, how you would typically find/confirm the root cause, what the solution does, and why it works.
+
+Solution: 
+
+Root cause 1. 
+iptables is currently blocking connections on port 80 through a catch-all deny rule. 
+An additional firewall rule is needed to explicitly allow access to the server.
+
+# Accept connections on TCP port 80 for apache HTTPD
+ iptables -A INPUT -p tcp --dport 80 -j ACCEPT
+# Save settings
+ /sbin/service iptables save
+
+ This adds and saves an additional rule to explicitly accept TCP connections on port 80. In detail, the command appends (-A) an additional rule to the running config targeting traffic coming into the network interface (INPUT) using the TCP protocol (-p TCP) with a destination TCP port of 80 (--dport 80). When this criteria is found in an incoming packet the inspection jumps (-j) to the allow policy (ACCEPT) and ceases to examine the packet with any further checks. The configuration is then saved to ensure it is not lost when the iptables service or server is restarted. 
+
+To find this, checking for open ports is a good start. 
+# List of open ports (as file handles)
+  lsof -i -P
+# List of listening sockets
+  netstat -l
+# List of all open sockets
+  netstat -a
+
+This will tell you if the port is listening for new connections or not. As the apache service is running and listening on port 80 something else is causing the problem. Check for something blocking the connection:
+
+# Local firewall rules
+  service iptables status
+  iptables --list
+
+This will show the current state and configuration of iptables if it is running. In this lab, an inspection of iptables shows a deny rule for all traffic with no following allow for http. If iptables wasn't the root cause, the next step would be to check from a remote device with pings, traceroutes, telnet to port 80, and a remote nmap scan of port 80 to check for a packet filter running on a network device.

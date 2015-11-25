@@ -1,0 +1,9 @@
+
+Use this file to create a brief description of the problem. Include a summary of the current and desired server configuration, worded as if an end user, developer, or another SysAdmin would ask for help. This will be presented to the problem solver each time they login over SSH.
+
+Problem Statement: 
+This CentOS server is running a basic web application using Apache HTTPD and PHP to deliver dynamic pages. Everything is installed but users cannot view web content. With the default Vagrantfile provided port 8080 on your device is forwarding to port 80 on the server. You can access the web server by opening http://localhost:8080/ in your web browser
+
+Requirements:
+ - The server must not have any additional packages installed
+ - Only the necessary ports to run the web service should be reachable from the outside world
